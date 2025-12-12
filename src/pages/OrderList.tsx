@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { StatusTabs, Tab } from "@/components/common/StatusTabs";
 import { SearchFilter, FilterField } from "@/components/common/SearchFilter";
@@ -79,6 +80,7 @@ const mockData: Order[] = [
 ];
 
 export default function OrderList() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [filters, setFilters] = useState<Record<string, string>>({});
 
@@ -145,7 +147,7 @@ export default function OrderList() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <StatusTabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
-          <Button size="sm" className="gap-1.5">
+          <Button size="sm" className="gap-1.5" onClick={() => navigate("/orders/create")}>
             <Plus className="w-4 h-4" />
             创建订单
           </Button>

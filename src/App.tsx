@@ -8,6 +8,7 @@ import ClearanceList from "./pages/ClearanceList";
 import DeliveryList from "./pages/DeliveryList";
 import IncomeList from "./pages/IncomeList";
 import PaymentList from "./pages/PaymentList";
+import CreateOrder from "./pages/CreateOrder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Navigate to="/orders" replace />} />
           <Route path="/orders" element={<OrderList />} />
+          <Route path="/orders/create" element={<CreateOrder />} />
           <Route path="/clearance" element={<ClearanceList />} />
           <Route path="/delivery" element={<DeliveryList />} />
           <Route path="/income" element={<IncomeList />} />
