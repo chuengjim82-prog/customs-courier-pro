@@ -2,8 +2,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import OrderList from "./pages/OrderList";
+import ClearanceList from "./pages/ClearanceList";
+import DeliveryList from "./pages/DeliveryList";
+import IncomeList from "./pages/IncomeList";
+import PaymentList from "./pages/PaymentList";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -15,8 +19,12 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/" element={<Navigate to="/orders" replace />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/clearance" element={<ClearanceList />} />
+          <Route path="/delivery" element={<DeliveryList />} />
+          <Route path="/income" element={<IncomeList />} />
+          <Route path="/payment" element={<PaymentList />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
