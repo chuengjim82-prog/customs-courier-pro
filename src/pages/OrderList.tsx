@@ -104,6 +104,11 @@ export default function OrderList() {
               审核
             </ActionButton>
           )}
+          {record.status === "资料已审核" && (
+            <ActionButton variant="success" onClick={() => navigate(`/orders/${record.id}/declaration`)}>
+              申报
+            </ActionButton>
+          )}
           <ActionButton variant="primary">到港</ActionButton>
           <ActionButton variant="success">上网</ActionButton>
         </div>
