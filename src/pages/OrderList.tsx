@@ -97,8 +97,13 @@ export default function OrderList() {
     { 
       key: "actions", 
       title: "操作",
-      render: () => (
+      render: (_, record) => (
         <div className="flex gap-1">
+          {record.status === "资料待审核" && (
+            <ActionButton variant="warning" onClick={() => navigate(`/orders/${record.id}/review`)}>
+              审核
+            </ActionButton>
+          )}
           <ActionButton variant="primary">到港</ActionButton>
           <ActionButton variant="success">上网</ActionButton>
         </div>
