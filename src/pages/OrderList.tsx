@@ -139,14 +139,17 @@ export default function OrderList() {
               申报
             </ActionButton>
           )}
-          {record.status === "清关中" && (
+          {record.status === "清关中" ? (
             <>
               <ActionButton variant="primary">回传初步报关单</ActionButton>
               <ActionButton variant="success">清关完成</ActionButton>
             </>
+          ) : (
+            <>
+              <ActionButton variant="primary" onClick={() => handleArrivalClick(record)}>到港</ActionButton>
+              <ActionButton variant="success" onClick={() => handleOnlineClick(record)}>上网</ActionButton>
+            </>
           )}
-          <ActionButton variant="primary" onClick={() => handleArrivalClick(record)}>到港</ActionButton>
-          <ActionButton variant="success" onClick={() => handleOnlineClick(record)}>上网</ActionButton>
         </div>
       )
     },
