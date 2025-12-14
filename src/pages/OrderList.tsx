@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ArrivalDialog } from "@/components/dialogs/ArrivalDialog";
 import { OnlineDialog } from "@/components/dialogs/OnlineDialog";
+import { DeclarationUploadDialog } from "@/components/dialogs/DeclarationUploadDialog";
 import { toast } from "sonner";
 
 interface Order {
@@ -92,6 +93,7 @@ export default function OrderList() {
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [arrivalDialogOpen, setArrivalDialogOpen] = useState(false);
   const [onlineDialogOpen, setOnlineDialogOpen] = useState(false);
+  const [declarationUploadDialogOpen, setDeclarationUploadDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const handleArrivalClick = (order: Order) => {
@@ -111,6 +113,16 @@ export default function OrderList() {
 
   const handleOnlineConfirm = (onlineTime: string) => {
     toast.success(`订单 ${selectedOrder?.billNo} 海关上网时间已确认: ${onlineTime.replace("T", " ")}`);
+    setSelectedOrder(null);
+  };
+
+  const handleDeclarationUploadClick = (order: Order) => {
+    setSelectedOrder(order);
+    setDeclarationUploadDialogOpen(true);
+  };
+
+  const handleDeclarationUpload = (file: File) => {
+    toast.success(`订单 ${selectedOrder?.billNo} 初步报关单 "${file.name}" 上传成功`);
     setSelectedOrder(null);
   };
 
@@ -141,7 +153,7 @@ export default function OrderList() {
           )}
           {record.status === "清关中" ? (
             <>
-              <ActionButton variant="primary">回传初步报关单</ActionButton>
+              <ActionButton variant="primary" onClick={() => handleDeclarationUploadClick(record)}>回传初步报关单</ActionButton>
               <ActionButton variant="success">清关完成</ActionButton>
             </>
           ) : (
@@ -233,6 +245,13 @@ export default function OrderList() {
           onOpenChange={setOnlineDialogOpen}
           billNo={selectedOrder?.billNo || ""}
           onConfirm={handleOnlineConfirm}
+        />
+
+        <DeclarationUploadDialog
+          open={declarationUploadDialogOpen}
+          onOpenChange={setDeclarationUploadDialogOpen}
+          billNo={selectedOrder?.billNo || ""}
+          onUpload={handleDeclarationUpload}
         />
       </div>
     </MainLayout>
