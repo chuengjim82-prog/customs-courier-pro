@@ -23,17 +23,31 @@ interface Order {
   fees: { do: boolean; port: boolean; tax: boolean };
 }
 
+const statusMap: Record<string, string> = {
+  all: "all",
+  pending: "资料待审核",
+  reviewed: "资料已审核",
+  clearing: "清关中",
+  cleared: "清关完成",
+  booked: "已预约提柜",
+  picked: "已提柜",
+  storage: "放置堆场",
+  delivering: "出派中",
+  received: "已签收",
+  returned: "已还柜",
+};
+
 const tabs: Tab[] = [
-  { key: "all", label: "ALL", count: 1000 },
+  { key: "all", label: "ALL" },
   { key: "pending", label: "资料待审核" },
   { key: "reviewed", label: "资料已审核" },
-  { key: "clearing", label: "清关中", count: 10 },
+  { key: "clearing", label: "清关中" },
   { key: "cleared", label: "清关完成" },
   { key: "booked", label: "已预约提柜" },
   { key: "picked", label: "已提柜" },
   { key: "storage", label: "放置堆场" },
   { key: "delivering", label: "出派中" },
-  { key: "received", label: "已签收", count: 800 },
+  { key: "received", label: "已签收" },
   { key: "returned", label: "已还柜" },
 ];
 
@@ -47,36 +61,26 @@ const filterFields: FilterField[] = [
 ];
 
 const mockData: Order[] = [
-  {
-    id: "1",
-    billNo: "55-58558",
-    containerNo: "CSNU6927227",
-    shipping: "COSCO",
-    port: "DMM",
-    customerCode: "JK025",
-    agent: "AM",
-    recipient: "XXX",
-    estimatedDate: "2015/11/10",
-    shippingDate: "",
-    arrivalDate: "",
-    status: "资料待审核",
-    fees: { do: false, port: false, tax: false },
-  },
-  {
-    id: "2",
-    billNo: "55-58555",
-    containerNo: "CSNU6927226",
-    shipping: "COSCO",
-    port: "DMM",
-    customerCode: "JK025",
-    agent: "AM",
-    recipient: "XXX",
-    estimatedDate: "2015/11/10",
-    shippingDate: "",
-    arrivalDate: "",
-    status: "资料待审核",
-    fees: { do: false, port: false, tax: false },
-  },
+  { id: "1", billNo: "55-58558", containerNo: "CSNU6927227", shipping: "COSCO", port: "DMM", customerCode: "JK025", agent: "AM", recipient: "客户A", estimatedDate: "2025/11/10", shippingDate: "", arrivalDate: "", status: "资料待审核", fees: { do: false, port: false, tax: false } },
+  { id: "2", billNo: "55-58555", containerNo: "CSNU6927226", shipping: "COSCO", port: "DMM", customerCode: "JK025", agent: "AM", recipient: "客户B", estimatedDate: "2025/11/10", shippingDate: "", arrivalDate: "", status: "资料待审核", fees: { do: false, port: false, tax: false } },
+  { id: "3", billNo: "55-58560", containerNo: "ECMU8582301", shipping: "MSC", port: "JED", customerCode: "JK026", agent: "BM", recipient: "客户C", estimatedDate: "2025/11/12", shippingDate: "2025/11/08", arrivalDate: "", status: "资料已审核", fees: { do: true, port: false, tax: false } },
+  { id: "4", billNo: "55-58561", containerNo: "TCKU6311253", shipping: "EVERGREEN", port: "DMM", customerCode: "JK027", agent: "AM", recipient: "客户D", estimatedDate: "2025/11/13", shippingDate: "2025/11/09", arrivalDate: "", status: "资料已审核", fees: { do: true, port: true, tax: false } },
+  { id: "5", billNo: "55-58562", containerNo: "MSKU1234567", shipping: "COSCO", port: "JED", customerCode: "JK028", agent: "CM", recipient: "客户E", estimatedDate: "2025/11/14", shippingDate: "2025/11/10", arrivalDate: "2025/11/18", status: "清关中", fees: { do: true, port: true, tax: false } },
+  { id: "6", billNo: "55-58563", containerNo: "HLXU7654321", shipping: "MSC", port: "DMM", customerCode: "JK029", agent: "AM", recipient: "客户F", estimatedDate: "2025/11/15", shippingDate: "2025/11/11", arrivalDate: "2025/11/19", status: "清关中", fees: { do: true, port: true, tax: true } },
+  { id: "7", billNo: "55-58564", containerNo: "OOLU9876543", shipping: "OOCL", port: "JED", customerCode: "JK030", agent: "BM", recipient: "客户G", estimatedDate: "2025/11/16", shippingDate: "2025/11/12", arrivalDate: "2025/11/20", status: "清关完成", fees: { do: true, port: true, tax: true } },
+  { id: "8", billNo: "55-58565", containerNo: "CMAU2468135", shipping: "CMA", port: "DMM", customerCode: "JK031", agent: "AM", recipient: "客户H", estimatedDate: "2025/11/17", shippingDate: "2025/11/13", arrivalDate: "2025/11/21", status: "清关完成", fees: { do: true, port: true, tax: true } },
+  { id: "9", billNo: "55-58566", containerNo: "NYKU1357924", shipping: "ONE", port: "JED", customerCode: "JK032", agent: "CM", recipient: "客户I", estimatedDate: "2025/11/18", shippingDate: "2025/11/14", arrivalDate: "2025/11/22", status: "已预约提柜", fees: { do: true, port: true, tax: true } },
+  { id: "10", billNo: "55-58567", containerNo: "SUDU8642097", shipping: "COSCO", port: "DMM", customerCode: "JK033", agent: "AM", recipient: "客户J", estimatedDate: "2025/11/19", shippingDate: "2025/11/15", arrivalDate: "2025/11/23", status: "已预约提柜", fees: { do: true, port: true, tax: true } },
+  { id: "11", billNo: "55-58568", containerNo: "TRLU7531086", shipping: "MSC", port: "JED", customerCode: "JK034", agent: "BM", recipient: "客户K", estimatedDate: "2025/11/20", shippingDate: "2025/11/16", arrivalDate: "2025/11/24", status: "已提柜", fees: { do: true, port: true, tax: true } },
+  { id: "12", billNo: "55-58569", containerNo: "CAIU9517382", shipping: "EVERGREEN", port: "DMM", customerCode: "JK035", agent: "AM", recipient: "客户L", estimatedDate: "2025/11/21", shippingDate: "2025/11/17", arrivalDate: "2025/11/25", status: "已提柜", fees: { do: true, port: true, tax: true } },
+  { id: "13", billNo: "55-58570", containerNo: "BMOU4826159", shipping: "COSCO", port: "JED", customerCode: "JK036", agent: "CM", recipient: "客户M", estimatedDate: "2025/11/22", shippingDate: "2025/11/18", arrivalDate: "2025/11/26", status: "放置堆场", fees: { do: true, port: true, tax: true } },
+  { id: "14", billNo: "55-58571", containerNo: "FCIU3692847", shipping: "CMA", port: "DMM", customerCode: "JK037", agent: "AM", recipient: "客户N", estimatedDate: "2025/11/23", shippingDate: "2025/11/19", arrivalDate: "2025/11/27", status: "放置堆场", fees: { do: true, port: true, tax: true } },
+  { id: "15", billNo: "55-58572", containerNo: "GESU5147293", shipping: "ONE", port: "JED", customerCode: "JK038", agent: "BM", recipient: "客户O", estimatedDate: "2025/11/24", shippingDate: "2025/11/20", arrivalDate: "2025/11/28", status: "出派中", fees: { do: true, port: true, tax: true } },
+  { id: "16", billNo: "55-58573", containerNo: "HDMU8263941", shipping: "MSC", port: "DMM", customerCode: "JK039", agent: "AM", recipient: "客户P", estimatedDate: "2025/11/25", shippingDate: "2025/11/21", arrivalDate: "2025/11/29", status: "出派中", fees: { do: true, port: true, tax: true } },
+  { id: "17", billNo: "55-58574", containerNo: "APLU6394827", shipping: "COSCO", port: "JED", customerCode: "JK040", agent: "CM", recipient: "客户Q", estimatedDate: "2025/11/26", shippingDate: "2025/11/22", arrivalDate: "2025/11/30", status: "已签收", fees: { do: true, port: true, tax: true } },
+  { id: "18", billNo: "55-58575", containerNo: "YMLU7284916", shipping: "YML", port: "DMM", customerCode: "JK041", agent: "AM", recipient: "客户R", estimatedDate: "2025/11/27", shippingDate: "2025/11/23", arrivalDate: "2025/12/01", status: "已签收", fees: { do: true, port: true, tax: true } },
+  { id: "19", billNo: "55-58576", containerNo: "SEGU9173625", shipping: "EVERGREEN", port: "JED", customerCode: "JK042", agent: "BM", recipient: "客户S", estimatedDate: "2025/11/28", shippingDate: "2025/11/24", arrivalDate: "2025/12/02", status: "已还柜", fees: { do: true, port: true, tax: true } },
+  { id: "20", billNo: "55-58577", containerNo: "PCIU8462739", shipping: "CMA", port: "DMM", customerCode: "JK043", agent: "AM", recipient: "客户T", estimatedDate: "2025/11/29", shippingDate: "2025/11/25", arrivalDate: "2025/12/03", status: "已还柜", fees: { do: true, port: true, tax: true } },
 ];
 
 export default function OrderList() {
@@ -171,7 +175,11 @@ export default function OrderList() {
           onReset={() => setFilters({})}
         />
 
-        <DataTable columns={columns} data={mockData} rowKey="id" />
+        <DataTable 
+          columns={columns} 
+          data={activeTab === "all" ? mockData : mockData.filter(item => item.status === statusMap[activeTab])} 
+          rowKey="id" 
+        />
 
         <div className="text-xs text-muted-foreground space-y-1 bg-muted/30 p-3 rounded-lg">
           <p><span className="font-medium">到港</span>：在船司网站能查到到港轨迹</p>
