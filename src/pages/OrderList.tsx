@@ -128,7 +128,7 @@ export default function OrderList() {
       key: "actions", 
       title: "操作",
       render: (_, record) => (
-        <div className="flex gap-1">
+        <div className="flex gap-1 flex-wrap">
           {record.status === "资料待审核" && (
             <ActionButton variant="warning" onClick={() => navigate(`/orders/${record.id}/review`)}>
               审核
@@ -138,6 +138,12 @@ export default function OrderList() {
             <ActionButton variant="success" onClick={() => navigate(`/orders/${record.id}/declaration`)}>
               申报
             </ActionButton>
+          )}
+          {record.status === "清关中" && (
+            <>
+              <ActionButton variant="primary">回传初步报关单</ActionButton>
+              <ActionButton variant="success">清关完成</ActionButton>
+            </>
           )}
           <ActionButton variant="primary" onClick={() => handleArrivalClick(record)}>到港</ActionButton>
           <ActionButton variant="success" onClick={() => handleOnlineClick(record)}>上网</ActionButton>
