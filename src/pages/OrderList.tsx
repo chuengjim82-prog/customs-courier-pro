@@ -6,6 +6,8 @@ import { SearchFilter, FilterField } from "@/components/common/SearchFilter";
 import { DataTable, Column, StatusBadge, ActionButton } from "@/components/common/DataTable";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { ArrivalDialog } from "@/components/dialogs/ArrivalDialog";
+import { toast } from "sonner";
 
 interface Order {
   id: string;
@@ -87,6 +89,18 @@ export default function OrderList() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("all");
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [arrivalDialogOpen, setArrivalDialogOpen] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+
+  const handleArrivalClick = (order: Order) => {
+    setSelectedOrder(order);
+    setArrivalDialogOpen(true);
+  };
+
+  const handleArrivalConfirm = (arrivalTime: string) => {
+    toast.success(`订单 ${selectedOrder?.billNo} 到港时间已确认: ${arrivalTime.replace("T", " ")}`);
+    setSelectedOrder(null);
+  };
 
   const columns: Column<Order>[] = [
     { 
@@ -113,7 +127,7 @@ export default function OrderList() {
               申报
             </ActionButton>
           )}
-          <ActionButton variant="primary">到港</ActionButton>
+          <ActionButton variant="primary" onClick={() => handleArrivalClick(record)}>到港</ActionButton>
           <ActionButton variant="success">上网</ActionButton>
         </div>
       )
@@ -185,6 +199,13 @@ export default function OrderList() {
           <p><span className="font-medium">到港</span>：在船司网站能查到到港轨迹</p>
           <p><span className="font-medium">上网</span>：海关已能查询到提单号</p>
         </div>
+
+        <ArrivalDialog
+          open={arrivalDialogOpen}
+          onOpenChange={setArrivalDialogOpen}
+          billNo={selectedOrder?.billNo || ""}
+          onConfirm={handleArrivalConfirm}
+        />
       </div>
     </MainLayout>
   );
