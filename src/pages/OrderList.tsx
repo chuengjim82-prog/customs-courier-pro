@@ -7,6 +7,7 @@ import { DataTable, Column, StatusBadge, ActionButton } from "@/components/commo
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { ArrivalDialog } from "@/components/dialogs/ArrivalDialog";
+import { OnlineDialog } from "@/components/dialogs/OnlineDialog";
 import { toast } from "sonner";
 
 interface Order {
@@ -90,6 +91,7 @@ export default function OrderList() {
   const [activeTab, setActiveTab] = useState("all");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [arrivalDialogOpen, setArrivalDialogOpen] = useState(false);
+  const [onlineDialogOpen, setOnlineDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const handleArrivalClick = (order: Order) => {
@@ -97,8 +99,18 @@ export default function OrderList() {
     setArrivalDialogOpen(true);
   };
 
+  const handleOnlineClick = (order: Order) => {
+    setSelectedOrder(order);
+    setOnlineDialogOpen(true);
+  };
+
   const handleArrivalConfirm = (arrivalTime: string) => {
     toast.success(`订单 ${selectedOrder?.billNo} 到港时间已确认: ${arrivalTime.replace("T", " ")}`);
+    setSelectedOrder(null);
+  };
+
+  const handleOnlineConfirm = (onlineTime: string) => {
+    toast.success(`订单 ${selectedOrder?.billNo} 海关上网时间已确认: ${onlineTime.replace("T", " ")}`);
     setSelectedOrder(null);
   };
 
@@ -128,7 +140,7 @@ export default function OrderList() {
             </ActionButton>
           )}
           <ActionButton variant="primary" onClick={() => handleArrivalClick(record)}>到港</ActionButton>
-          <ActionButton variant="success">上网</ActionButton>
+          <ActionButton variant="success" onClick={() => handleOnlineClick(record)}>上网</ActionButton>
         </div>
       )
     },
@@ -205,6 +217,13 @@ export default function OrderList() {
           onOpenChange={setArrivalDialogOpen}
           billNo={selectedOrder?.billNo || ""}
           onConfirm={handleArrivalConfirm}
+        />
+
+        <OnlineDialog
+          open={onlineDialogOpen}
+          onOpenChange={setOnlineDialogOpen}
+          billNo={selectedOrder?.billNo || ""}
+          onConfirm={handleOnlineConfirm}
         />
       </div>
     </MainLayout>
