@@ -4,6 +4,7 @@ import { StatusTabs, Tab } from "@/components/common/StatusTabs";
 import { SearchFilter, FilterField } from "@/components/common/SearchFilter";
 import { DataTable, Column, StatusBadge, ActionButton } from "@/components/common/DataTable";
 import { DeclarationUploadDialog } from "@/components/dialogs/DeclarationUploadDialog";
+import { ClearanceCompleteDialog } from "@/components/dialogs/ClearanceCompleteDialog";
 import { toast } from "sonner";
 
 interface Clearance {
@@ -76,6 +77,7 @@ export default function ClearanceList() {
   const [activeTab, setActiveTab] = useState("clearing");
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [declarationUploadDialogOpen, setDeclarationUploadDialogOpen] = useState(false);
+  const [clearanceCompleteDialogOpen, setClearanceCompleteDialogOpen] = useState(false);
   const [selectedClearance, setSelectedClearance] = useState<Clearance | null>(null);
 
   const handleDeclarationUploadClick = (clearance: Clearance) => {
@@ -85,6 +87,16 @@ export default function ClearanceList() {
 
   const handleDeclarationUpload = (file: File) => {
     toast.success(`订单 ${selectedClearance?.billNo} 初步报关单 "${file.name}" 上传成功`);
+    setSelectedClearance(null);
+  };
+
+  const handleClearanceCompleteClick = (clearance: Clearance) => {
+    setSelectedClearance(clearance);
+    setClearanceCompleteDialogOpen(true);
+  };
+
+  const handleClearanceCompleteConfirm = (clearanceTime: string) => {
+    toast.success(`订单 ${selectedClearance?.billNo} 清关完成时间已确认: ${clearanceTime.replace("T", " ")}`);
     setSelectedClearance(null);
   };
 
@@ -113,7 +125,7 @@ export default function ClearanceList() {
           {record.status === "清关中" ? (
             <>
               <ActionButton variant="warning" onClick={() => handleDeclarationUploadClick(record)}>回传初步报关单</ActionButton>
-              <ActionButton variant="success">清关完成</ActionButton>
+              <ActionButton variant="success" onClick={() => handleClearanceCompleteClick(record)}>清关完成</ActionButton>
             </>
           ) : (
             <>
@@ -182,6 +194,13 @@ export default function ClearanceList() {
           onOpenChange={setDeclarationUploadDialogOpen}
           billNo={selectedClearance?.billNo || ""}
           onUpload={handleDeclarationUpload}
+        />
+
+        <ClearanceCompleteDialog
+          open={clearanceCompleteDialogOpen}
+          onOpenChange={setClearanceCompleteDialogOpen}
+          billNo={selectedClearance?.billNo || ""}
+          onConfirm={handleClearanceCompleteConfirm}
         />
       </div>
     </MainLayout>
