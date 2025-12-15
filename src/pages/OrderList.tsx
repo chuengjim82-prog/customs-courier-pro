@@ -9,6 +9,7 @@ import { Plus } from "lucide-react";
 import { ArrivalDialog } from "@/components/dialogs/ArrivalDialog";
 import { OnlineDialog } from "@/components/dialogs/OnlineDialog";
 import { DeclarationUploadDialog } from "@/components/dialogs/DeclarationUploadDialog";
+import { ClearanceCompleteDialog } from "@/components/dialogs/ClearanceCompleteDialog";
 import { toast } from "sonner";
 
 interface Order {
@@ -94,6 +95,7 @@ export default function OrderList() {
   const [arrivalDialogOpen, setArrivalDialogOpen] = useState(false);
   const [onlineDialogOpen, setOnlineDialogOpen] = useState(false);
   const [declarationUploadDialogOpen, setDeclarationUploadDialogOpen] = useState(false);
+  const [clearanceCompleteDialogOpen, setClearanceCompleteDialogOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const handleArrivalClick = (order: Order) => {
@@ -126,6 +128,16 @@ export default function OrderList() {
     setSelectedOrder(null);
   };
 
+  const handleClearanceCompleteClick = (order: Order) => {
+    setSelectedOrder(order);
+    setClearanceCompleteDialogOpen(true);
+  };
+
+  const handleClearanceCompleteConfirm = (clearanceTime: string) => {
+    toast.success(`订单 ${selectedOrder?.billNo} 清关完成时间已确认: ${clearanceTime.replace("T", " ")}`);
+    setSelectedOrder(null);
+  };
+
   const columns: Column<Order>[] = [
     { 
       key: "billNo", 
@@ -154,7 +166,7 @@ export default function OrderList() {
           {record.status === "清关中" ? (
             <>
               <ActionButton variant="primary" onClick={() => handleDeclarationUploadClick(record)}>回传初步报关单</ActionButton>
-              <ActionButton variant="success">清关完成</ActionButton>
+              <ActionButton variant="success" onClick={() => handleClearanceCompleteClick(record)}>清关完成</ActionButton>
             </>
           ) : (
             <>
@@ -252,6 +264,13 @@ export default function OrderList() {
           onOpenChange={setDeclarationUploadDialogOpen}
           billNo={selectedOrder?.billNo || ""}
           onUpload={handleDeclarationUpload}
+        />
+
+        <ClearanceCompleteDialog
+          open={clearanceCompleteDialogOpen}
+          onOpenChange={setClearanceCompleteDialogOpen}
+          billNo={selectedOrder?.billNo || ""}
+          onConfirm={handleClearanceCompleteConfirm}
         />
       </div>
     </MainLayout>
