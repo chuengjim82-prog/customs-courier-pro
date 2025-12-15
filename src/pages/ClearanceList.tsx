@@ -3,6 +3,8 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { StatusTabs, Tab } from "@/components/common/StatusTabs";
 import { SearchFilter, FilterField } from "@/components/common/SearchFilter";
 import { DataTable, Column, StatusBadge, ActionButton } from "@/components/common/DataTable";
+import { DeclarationUploadDialog } from "@/components/dialogs/DeclarationUploadDialog";
+import { toast } from "sonner";
 
 interface Clearance {
   id: string;
@@ -73,6 +75,18 @@ const mockDataClearing: Clearance[] = [
 export default function ClearanceList() {
   const [activeTab, setActiveTab] = useState("clearing");
   const [filters, setFilters] = useState<Record<string, string>>({});
+  const [declarationUploadDialogOpen, setDeclarationUploadDialogOpen] = useState(false);
+  const [selectedClearance, setSelectedClearance] = useState<Clearance | null>(null);
+
+  const handleDeclarationUploadClick = (clearance: Clearance) => {
+    setSelectedClearance(clearance);
+    setDeclarationUploadDialogOpen(true);
+  };
+
+  const handleDeclarationUpload = (file: File) => {
+    toast.success(`订单 ${selectedClearance?.billNo} 初步报关单 "${file.name}" 上传成功`);
+    setSelectedClearance(null);
+  };
 
   const columnsClearing: Column<Clearance>[] = [
     { 
@@ -98,7 +112,7 @@ export default function ClearanceList() {
         <div className="flex gap-1">
           {record.status === "清关中" ? (
             <>
-              <ActionButton variant="warning">回传初步报关单</ActionButton>
+              <ActionButton variant="warning" onClick={() => handleDeclarationUploadClick(record)}>回传初步报关单</ActionButton>
               <ActionButton variant="success">清关完成</ActionButton>
             </>
           ) : (
@@ -162,6 +176,13 @@ export default function ClearanceList() {
         <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg">
           <p>初步报关单要发给客户，客户需要这个初步报关单进行缴税</p>
         </div>
+
+        <DeclarationUploadDialog
+          open={declarationUploadDialogOpen}
+          onOpenChange={setDeclarationUploadDialogOpen}
+          billNo={selectedClearance?.billNo || ""}
+          onUpload={handleDeclarationUpload}
+        />
       </div>
     </MainLayout>
   );
