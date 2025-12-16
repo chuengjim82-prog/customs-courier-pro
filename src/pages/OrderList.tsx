@@ -42,12 +42,11 @@ const tabs: Tab[] = [
 ];
 
 const filterFields: FilterField[] = [
-  { key: "billNo", label: "提单号" },
-  { key: "customerCode", label: "客户代码" },
-  { key: "port", label: "清关口岸" },
-  { key: "agent", label: "清关代理" },
-  { key: "date", label: "日期" },
-  { key: "deliveryCompany", label: "派送公司" },
+  { key: "waybillNo", label: "提单号" },
+  { key: "orderNo", label: "订单号" },
+  { key: "shipperName", label: "发货人" },
+  { key: "consigneeName", label: "收货人" },
+  { key: "custPort", label: "清关口岸" },
 ];
 
 export default function OrderList() {
