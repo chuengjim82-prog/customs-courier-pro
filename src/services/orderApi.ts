@@ -1,5 +1,3 @@
-const API_BASE_URL = "http://8.134.102.174:8002/api";
-
 export interface OrderApiItem {
   id: number;
   statusi: number;
@@ -47,12 +45,14 @@ export interface OrderApiResponse {
 }
 
 export async function fetchOrders(pageIndex = 1, pageSize = 10): Promise<OrderApiResponse> {
-  const response = await fetch(`${API_BASE_URL}/dynamic/order-base-info?pageIndex=${pageIndex}&pageSize=${pageSize}`, {
-    headers: {
-      "Accept": "application/json",
-      "Cache-Control": "no-cache",
-    },
-  });
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/order-proxy?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   
   if (!response.ok) {
     throw new Error(`API请求失败: ${response.status}`);

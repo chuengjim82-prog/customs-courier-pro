@@ -1,0 +1,4 @@
+project_id = "qpwxnyklyuptccuvpxbe"
+
+[functions.order-proxy]
+verify_jwt = false
