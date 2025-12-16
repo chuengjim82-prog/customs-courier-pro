@@ -23,7 +23,7 @@ interface Clearance {
 
 const tabs: Tab[] = [
   { key: "all", label: "ALL", count: 1000 },
-  { key: "pending", label: "资料待审核" },
+  { key: "pending", label: "资料待审核1" },
   { key: "reviewed", label: "资料已审核" },
   { key: "clearing", label: "清关中", count: 10 },
   { key: "cleared", label: "清关完成" },
